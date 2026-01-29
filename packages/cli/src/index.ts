@@ -43,7 +43,6 @@ import hp from './util/humanize-path';
 import { commands, commandNames } from './commands';
 import { handleCommandTypo } from './util/handle-command-typo';
 import pkg from './util/pkg';
-import cmd from './util/output/cmd';
 import param from './util/output/param';
 import highlight from './util/output/highlight';
 import { parseArguments } from './util/get-args';
@@ -61,14 +60,12 @@ import {
 } from './util/config/get-default';
 import * as ERRORS from './util/errors-ts';
 import { APIError } from './util/errors-ts';
-import getUpdateCommand from './util/get-update-command';
 import { executeUpgrade } from './util/upgrade';
 import { getCommandName, getTitleName } from './util/pkg-name';
 import login from './commands/login';
 import type { AuthConfig, GlobalConfig } from '@vercel-internals/types';
 import type { VercelConfig } from '@vercel/client';
 import { ProxyAgent } from 'proxy-agent';
-import box from './util/output/box';
 import { execExtension } from './util/extension/exec';
 import { TelemetryEventStore } from './util/telemetry';
 import { RootTelemetryClient } from './util/telemetry/root';
@@ -917,7 +914,7 @@ const main = async () => {
 main()
   .then(async exitCode => {
     // Print update information, if available
-    if (!process.env.NO_UPDATE_NOTIFIER) {
+    if (isTTY && !process.env.NO_UPDATE_NOTIFIER) {
       // Check if an update is available. If so, `latest` will contain a string
       // of the latest version, otherwise `undefined`.
       const latest = getLatestVersion({
@@ -926,60 +923,37 @@ main()
       if (latest) {
         const changelog = 'https://github.com/vercel/vercel/releases';
 
-        if (isTTY) {
-          // Interactive mode: show condensed prompt
-          const errorMsg =
-            exitCode && exitCode !== 2
-              ? chalk.magenta(
-                  ` The latest update ${chalk.italic(
-                    'may'
-                  )} fix any errors that occurred.`
-                )
-              : '';
+        const errorMsg =
+          exitCode && exitCode !== 2
+            ? chalk.magenta(
+                ` The latest update ${chalk.italic(
+                  'may'
+                )} fix any errors that occurred.`
+              )
+            : '';
 
-          output.print(
-            `\nUpdate available for Vercel CLI (${chalk.gray(
-              `v${pkg.version}`
-            )} → ${chalk.green(`v${latest}`)})${errorMsg}\n`
-          );
+        output.print(
+          `\nUpdate available for Vercel CLI (${chalk.gray(
+            `v${pkg.version}`
+          )} → ${chalk.green(`v${latest}`)})${errorMsg}\n`
+        );
 
-          const action = await client.input.expand({
-            message: 'What would you like to do?',
-            default: 'u',
-            choices: [
-              { key: 'u', name: 'Upgrade now', value: 'upgrade' },
-              { key: 'c', name: 'View changelog', value: 'changelog' },
-              { key: 's', name: 'Skip', value: 'skip' },
-            ],
-          });
+        const action = await client.input.expand({
+          message: 'What would you like to do?',
+          default: 'u',
+          choices: [
+            { key: 'u', name: 'Upgrade now', value: 'upgrade' },
+            { key: 'c', name: 'View changelog', value: 'changelog' },
+            { key: 's', name: 'Skip', value: 'skip' },
+          ],
+        });
 
-          if (action === 'upgrade') {
-            const upgradeExitCode = await executeUpgrade();
-            process.exitCode = upgradeExitCode;
-            return;
-          } else if (action === 'changelog') {
-            await open(changelog);
-          }
-        } else {
-          // Non-interactive mode: show full update box
-          const errorMsg =
-            exitCode && exitCode !== 2
-              ? chalk.magenta(
-                  `\n\nThe latest update ${chalk.italic(
-                    'may'
-                  )} fix any errors that occurred.`
-                )
-              : '';
-          output.print(
-            box(
-              `Update available! ${chalk.gray(`v${pkg.version}`)} ≫ ${chalk.green(
-                `v${latest}`
-              )}
-Changelog: ${output.link(changelog, changelog, { fallback: false })}
-Run ${chalk.cyan(cmd(await getUpdateCommand()))} to update.${errorMsg}`
-            )
-          );
-          output.print('\n');
+        if (action === 'upgrade') {
+          const upgradeExitCode = await executeUpgrade();
+          process.exitCode = upgradeExitCode;
+          return;
+        } else if (action === 'changelog') {
+          await open(changelog);
         }
       }
     }
