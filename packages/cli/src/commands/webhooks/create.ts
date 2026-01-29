@@ -11,7 +11,7 @@ import { parseArguments } from '../../util/get-args';
 import { getFlagsSpecification } from '../../util/get-flags-specification';
 import { printError } from '../../util/error';
 import { isAPIError } from '../../util/errors-ts';
-import type { WebhookEvent } from '../../util/webhooks/types';
+import { validateWebhookEvents } from '../../util/webhooks/get-webhook-events';
 
 export default async function create(client: Client, argv: string[]) {
   const telemetry = new WebhooksCreateTelemetryClient({
@@ -67,6 +67,15 @@ export default async function create(client: Client, argv: string[]) {
     return 1;
   }
 
+  // Validate events against the OpenAPI spec
+  const invalidEvents = await validateWebhookEvents(events);
+  if (invalidEvents.length > 0) {
+    output.error(
+      `Invalid event type${invalidEvents.length > 1 ? 's' : ''}: ${invalidEvents.join(', ')}`
+    );
+    return 1;
+  }
+
   telemetry.trackCliOptionEvent(events);
   telemetry.trackCliOptionProject(projectIds);
 
@@ -79,7 +88,7 @@ export default async function create(client: Client, argv: string[]) {
   try {
     const webhook = await createWebhook(client, {
       url,
-      events: events as WebhookEvent[],
+      events,
       projectIds,
     });
 

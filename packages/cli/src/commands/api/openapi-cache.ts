@@ -119,12 +119,25 @@ export class OpenApiCache {
     ][]) {
       const resolvedProp = this.resolveSchemaRef(propSchema);
 
+      // Get enum values from the schema, handling array items
+      let enumValues = resolvedProp?.enum || propSchema.enum;
+      if (
+        !enumValues &&
+        (resolvedProp?.type === 'array' || propSchema.type === 'array')
+      ) {
+        const items = resolvedProp?.items || propSchema.items;
+        if (items) {
+          const resolvedItems = this.resolveSchemaRef(items);
+          enumValues = resolvedItems?.enum || items.enum;
+        }
+      }
+
       fields.push({
         name,
         required: requiredFields.has(name),
         description: resolvedProp?.description || propSchema.description,
         type: resolvedProp?.type || propSchema.type,
-        enumValues: resolvedProp?.enum || propSchema.enum,
+        enumValues,
       });
     }
 
