@@ -12,7 +12,7 @@ import {
   formatOutput,
   generateCurlCommand,
 } from './request-builder';
-import { OpenApiCache } from './openapi-cache';
+import { OpenApiCache } from '../../util/openapi';
 import { API_BASE_URL } from './constants';
 import {
   colorizeMethod,
