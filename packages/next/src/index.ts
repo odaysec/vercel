@@ -510,8 +510,10 @@ export const build: BuildV2 = async buildOptions => {
 
   if (
     // integration tests expect outputs object
-    !process.env.NEXT_BUILDER_INTEGRATION &&
-    process.env.NEXT_ENABLE_ADAPTER
+    (!process.env.NEXT_BUILDER_INTEGRATION &&
+      process.env.NEXT_ENABLE_ADAPTER) ||
+    // TODO: remove after testing
+    process.env
     // TODO: replace above opt-in with Next.js version
     // semver.gte(nextVersion, '16.1.1-canary.18', { includePrerelease: true })
   ) {
