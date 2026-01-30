@@ -2,7 +2,7 @@
   "name": "website",
   "private": true,
   "dependencies": {
-    "next": "https://vercel-packages.vercel.app/next/commits/fc378d169c6cef90aa427e670edffddd15e431ff/next",
+    "next": "https://vercel-packages.vercel.app/next/commits/ffdf58daf49fb1873dd901f55c05d6a49647279d/next",
     "react": "latest",
     "react-dom": "latest"
   },
