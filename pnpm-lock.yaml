@@ -1752,8 +1752,8 @@ importers:
         version: 1.1.1
     devDependencies:
       '@next-community/adapter-vercel':
-        specifier: https://files-jcg8otpvw-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz
-        version: '@files-jcg8otpvw-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz(next@16.1.6)'
+        specifier: https://files-p9zaqyels-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz
+        version: '@files-p9zaqyels-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz(next@16.1.6)'
       '@types/aws-lambda':
         specifier: 8.10.19
         version: 8.10.19
@@ -20949,9 +20949,9 @@ packages:
     resolution: {integrity: sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg==}
     dev: false
 
-  '@files-jcg8otpvw-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz(next@16.1.6)':
-    resolution: {tarball: https://files-jcg8otpvw-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz}
-    id: '@files-jcg8otpvw-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz'
+  '@files-p9zaqyels-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz(next@16.1.6)':
+    resolution: {tarball: https://files-p9zaqyels-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz}
+    id: '@files-p9zaqyels-vtest314-ijjk-testing.vercel.app/next-community-adapter-vercel-0.0.1-beta.2.tgz'
     name: '@next-community/adapter-vercel'
     version: 0.0.1-beta.2
     engines: {node: '>= 20.6.0'}
